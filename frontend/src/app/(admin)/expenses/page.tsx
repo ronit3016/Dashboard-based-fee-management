@@ -64,6 +64,8 @@ export default function ExpensesPage() {
     return totals;
   }, [expenses]);
 
+  const totalExpense = useMemo(() => expenses.reduce((sum, e) => sum + e.amount, 0), [expenses]);
+
   const pieData = CATEGORIES.map(c => ({
     name: c.name,
     value: categoryTotals[c.id],
@@ -114,7 +116,7 @@ export default function ExpensesPage() {
     <div className="space-y-6 animate-in slide-in-from-bottom-8 fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold font-heading text-amber-950 tracking-tight">Expenses</h1>
+          <h1 className="text-3xl font-extrabold font-heading text-purple-950 tracking-tight">Expenses</h1>
           <p className="text-slate-500">Monitor your cash outflows and operational overheads.</p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md font-bold px-6 py-6 h-auto">
@@ -133,28 +135,38 @@ export default function ExpensesPage() {
         <button
           onClick={() => setActiveCategory("All")}
           className={cn(
-            "shrink-0 px-5 py-3 rounded-2xl font-bold transition-all border shadow-sm flex items-center gap-2 hover:-translate-y-0.5",
-            activeCategory === "All" ? "bg-amber-900 text-white border-amber-900 shadow-md" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+            "shrink-0 px-5 py-3 rounded-2xl font-bold transition-all border shadow-sm flex items-center gap-2 hover:-translate-y-0.5 whitespace-nowrap h-[90px]",
+            activeCategory === "All" ? "bg-purple-900 text-white border-purple-900 shadow-md" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
           )}
         >
           🌐 All Expenses
         </button>
-        {CATEGORIES.map(cat => (
-          <button
-            key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
-            className={cn(
-              "shrink-0 px-5 py-3 rounded-2xl font-bold transition-all border shadow-sm flex items-center gap-2 flex-col items-start hover:-translate-y-0.5 min-w-[140px]",
-              activeCategory === cat.id ? "bg-amber-900 text-white border-amber-900 shadow-md" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
-            )}
-          >
-            <div className="flex w-full justify-between items-center bg-transparent">
-              <span className="text-xl bg-transparent">{cat.emoji}</span>
-              <span className={cn("text-lg font-mono", activeCategory === cat.id ? "text-amber-200" : "text-amber-700")}>${categoryTotals[cat.id]}</span>
-            </div>
-            <span className="text-sm mt-1">{cat.name}</span>
-          </button>
-        ))}
+        {CATEGORIES.map(cat => {
+          const catTotal = categoryTotals[cat.id] || 0;
+          const percent = totalExpense > 0 ? (catTotal / totalExpense) * 100 : 0;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={cn(
+                "shrink-0 px-5 py-3 rounded-2xl font-bold transition-all border shadow-sm flex flex-col items-start hover:-translate-y-0.5 min-w-[150px] h-[90px]",
+                activeCategory === cat.id ? "bg-purple-900 text-white border-purple-900 shadow-md" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+              )}
+            >
+              <div className="flex w-full justify-between items-center bg-transparent">
+                <span className="text-xl bg-transparent">{cat.emoji}</span>
+                <span className={cn("text-lg font-mono", activeCategory === cat.id ? "text-purple-200" : "text-purple-700")}>${catTotal}</span>
+              </div>
+              <span className="text-sm mt-1">{cat.name}</span>
+              <div className="w-full h-1.5 bg-slate-200/30 rounded-full mt-2 overflow-hidden shrink-0">
+                <div 
+                  className={cn("h-full transition-all", activeCategory === cat.id ? "bg-white" : "bg-purple-500")} 
+                  style={{ width: `${percent}%` }} 
+                />
+              </div>
+            </button>
+          )
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -215,7 +227,7 @@ export default function ExpensesPage() {
                    className={cn(
                      "px-3 py-2 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all",
                      selectedCategory === cat.id 
-                       ? "bg-amber-100 border-amber-400 text-amber-900 ring-2 ring-amber-400/50" 
+                       ? "bg-purple-100 border-purple-400 text-purple-900 ring-2 ring-purple-400/50" 
                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
                    )}
                  >

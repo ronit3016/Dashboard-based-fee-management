@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${plusJakarta.variable} ${dmMono.variable} antialiased scroll-smooth`}>
-      <body className="font-sans bg-gradient-to-br from-[#FFF8F2] to-[#F3EDE7] min-h-screen text-slate-800">
+      <body className="font-sans bg-gradient-to-br from-pink-100 via-rose-100 to-purple-100 min-h-screen text-slate-800 antialiased selection:bg-purple-200">
         <UserProvider>
           <OrderProvider>
             <ToastProvider>
