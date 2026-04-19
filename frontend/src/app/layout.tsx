@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${outfit.variable} ${playfair.variable} ${dmMono.variable} antialiased scroll-smooth`}>
-      <body className="font-sans min-h-screen antialiased">
+      <body className="font-sans min-h-screen antialiased bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 text-foreground selection:bg-purple-300">
         <UserProvider>
           <OrderProvider>
             <ToastProvider>

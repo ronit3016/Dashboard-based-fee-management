@@ -10,7 +10,18 @@ import { Cake, ShoppingBag, Search, Minus, Plus, ArrowRight, CheckCircle2 } from
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-const BAKERY_PRODUCTS = [
+type ProductCategory = "All" | "Pastries" | "Birthday Cakes" | "Wedding Cakes" | "Custom Cakes";
+
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  tag?: string;
+  category: Exclude<ProductCategory, "All">;
+  image: string;
+};
+
+const BAKERY_PRODUCTS: Product[] = [
   {
     id: 101,
     name: "Classic Chocolate Fudge",
@@ -29,8 +40,8 @@ const BAKERY_PRODUCTS = [
   },
   {
     id: 103,
-    name: "Triple Berry Bliss",
-    price: 45.00,
+    name: "Custom Bespoke Masterpiece",
+    price: 250.00,
     category: "Custom Cakes",
     image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600&q=80",
   },
@@ -51,14 +62,14 @@ const BAKERY_PRODUCTS = [
   },
   {
     id: 106,
-    name: "Dark Chocolate Tart",
+    name: "Triple Berry Tart",
     price: 38.50,
     category: "Pastries",
     image: "https://images.unsplash.com/photo-1519869325930-281384150729?w=800&q=80",
   }
 ];
 
-const CATEGORIES = ["All", "Pastries", "Birthday Cakes", "Wedding Cakes", "Custom Cakes"];
+const CATEGORIES: ProductCategory[] = ["All", "Pastries", "Birthday Cakes", "Wedding Cakes", "Custom Cakes"];
 
 export default function BakeryStorefront() {
   const { cart, addToCart, removeFromCart, placeOrder } = useOrder();
@@ -93,14 +104,14 @@ export default function BakeryStorefront() {
   };
 
   return (
-    <div className="min-h-screen bg-background font-sans selection:bg-primary/20 flex flex-col transition-colors duration-300">
+    <div className="min-h-screen bg-transparent font-sans selection:bg-primary/20 flex flex-col transition-colors duration-300">
       
       {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border/40 transition-all">
+      <header className="sticky top-0 z-50 bg-white/40 backdrop-blur-xl border-b border-white/20 transition-all shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between gap-6">
           
           <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transform group-hover:-rotate-6 transition-all duration-300">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/80 text-primary shadow-sm transform group-hover:-rotate-6 transition-all duration-300 backdrop-blur-md border border-white/40">
               <Cake className="h-5 w-5 text-current" />
             </div>
             <span className="hidden sm:inline font-extrabold text-2xl tracking-normal text-foreground font-heading">
@@ -112,7 +123,7 @@ export default function BakeryStorefront() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
             <Input 
               placeholder="Search patisseries..." 
-              className="w-full pl-12 pr-4 h-12 rounded-full border-border/40 bg-secondary/30 focus-visible:ring-1 focus-visible:ring-primary/50 text-foreground placeholder:text-foreground/40 transition-all"
+              className="w-full pl-12 pr-4 h-12 rounded-full border-white/40 bg-white/50 backdrop-blur-md focus-visible:ring-2 focus-visible:ring-primary/50 text-foreground placeholder:text-foreground/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -124,7 +135,7 @@ export default function BakeryStorefront() {
               if (!open) setTimeout(() => setCheckoutStep("cart"), 300);
             }}>
               <SheetTrigger render={
-                <button className="relative flex items-center justify-center rounded-full h-12 w-12 hover:bg-secondary transition-colors group">
+                <button className="relative flex items-center justify-center rounded-full h-12 w-12 hover:bg-white/50 backdrop-blur-md transition-colors group border border-transparent hover:border-white/50 shadow-sm">
                   <ShoppingBag className="h-6 w-6 text-foreground group-hover:scale-105 transition-transform" />
                   {cart.length > 0 && (
                     <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold shadow-sm animate-in zoom-in">
@@ -134,8 +145,8 @@ export default function BakeryStorefront() {
                 </button>
               } />
               
-              <SheetContent className="flex flex-col w-full sm:max-w-md bg-background border-l border-border/40 shadow-2xl p-0">
-                <SheetHeader className="p-8 border-b border-border/40 bg-secondary/10">
+              <SheetContent className="flex flex-col w-full sm:max-w-md bg-white/90 backdrop-blur-3xl border-l border-white/30 shadow-2xl p-0 transition-all">
+                <SheetHeader className="p-8 border-b border-border/10 bg-white/40">
                   <SheetTitle className="text-2xl font-bold font-heading text-foreground flex items-center gap-2">
                     {checkoutStep === "cart" ? "Your Selection" : checkoutStep === "form" ? "Details" : "Magnifique!"}
                   </SheetTitle>
@@ -249,7 +260,7 @@ export default function BakeryStorefront() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-32">
         
         {/* Categories */}
-        <div className="pt-12 pb-8 sticky top-24 z-40 bg-background/90 backdrop-blur-md -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="pt-12 pb-8 sticky top-24 z-40 bg-transparent -mx-4 px-4 sm:mx-0 sm:px-0">
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x">
             {CATEGORIES.map((cat) => (
               <button

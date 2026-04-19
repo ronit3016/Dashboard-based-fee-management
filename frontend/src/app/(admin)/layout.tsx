@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 import { useOrder } from "@/context/OrderContext";
 import { useToast } from "@/components/ui/toast-context";
@@ -60,9 +60,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Expenses", href: "/expenses", icon: Receipt },
   ];
 
-  if (!isAdmin) {
-    return <div className="flex h-screen items-center justify-center p-4">Unauthorized. You do not have admin access.</div>;
-  }
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAdmin) router.push("/");
+  }, [isAdmin, router]);
+
+  if (!isAdmin) return null;
 
   return (
     <SidebarProvider>

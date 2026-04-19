@@ -13,13 +13,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const MOCK_ORDERS = [
-  { id: "ORD-001", customer: "Alice Johnson", type: "Classic Chocolate", weight: "2kg", price: 70, date: "2024-10-24", status: "Delivered", payment: "Paid" },
-  { id: "ORD-002", customer: "Bob Smith", type: "Wedding Vanilla", weight: "5kg", price: 250, date: "2024-10-25", status: "Baking", payment: "Pending" },
-  { id: "ORD-003", customer: "Charlie Davis", type: "Strawberry Dream", weight: "1kg", price: 45, date: "2024-10-25", status: "Ready", payment: "Paid" },
-  { id: "ORD-004", customer: "Diana Prince", type: "Red Velvet", weight: "1.5kg", price: 60, date: "2024-10-26", status: "Baking", payment: "Paid" },
-  { id: "ORD-005", customer: "Evan Wright", type: "Custom Birthday", weight: "3kg", price: 120, date: "2024-10-27", status: "Baking", payment: "Pending" },
-];
+import { useOrder } from "@/context/OrderContext";
 
 const orderSchema = z.object({
   customer: z.string().min(2, "Customer name is required"),
@@ -27,14 +21,14 @@ const orderSchema = z.object({
   weight: z.string().min(1, "Weight is required"),
   price: z.number().positive("Price must be positive"),
   date: z.string().min(1, "Date is required"),
-  status: z.enum(["Baking", "Ready", "Delivered"]),
+  status: z.enum(["Pending", "Preparing", "Baking", "Ready", "Delivered"]),
   payment: z.enum(["Paid", "Pending"]),
 });
 
 type OrderFormValues = z.infer<typeof orderSchema>;
 
 export default function OrdersPage() {
-  const [orders, setOrders] = useState(MOCK_ORDERS);
+  const { orders } = useOrder();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [paymentFilter, setPaymentFilter] = useState("All");
@@ -45,14 +39,27 @@ export default function OrdersPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset, setValue } = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
-      status: "Baking",
+      status: "Pending",
       payment: "Pending"
     }
   });
 
-  const filteredOrders = orders.filter(o => 
+  const mappedOrders = React.useMemo(() => {
+     return orders.map(order => ({
+        id: order.id,
+        customer: order.client,
+        type: order.items.map(i => `${i.quantity}x ${i.name}`).join(', '),
+        weight: "Standard",
+        price: order.amount,
+        date: order.date,
+        status: order.status.charAt(0).toUpperCase() + order.status.slice(1), // Pending, Preparing, Delivered
+        payment: "Paid"
+     }));
+  }, [orders]);
+
+  const filteredOrders = mappedOrders.filter(o => 
     (o.customer.toLowerCase().includes(search.toLowerCase()) || o.id.toLowerCase().includes(search.toLowerCase())) &&
-    (statusFilter === "All" || o.status === statusFilter) &&
+    (statusFilter === "All" || o.status.toLowerCase() === statusFilter.toLowerCase()) &&
     (paymentFilter === "All" || o.payment === paymentFilter)
   );
 
@@ -60,21 +67,17 @@ export default function OrdersPage() {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
     
-    const newOrder = {
-      id: `ORD-${String(orders.length + 1).padStart(3, '0')}`,
-      ...data
-    };
-    
-    setOrders([newOrder, ...orders]);
     setIsModalOpen(false);
     reset();
-    toast("Order created successfully!", "success");
+    toast("Order created! (Mocked on Admin)", "success");
   };
 
   const statusColors: Record<string, string> = {
     "Delivered": "bg-emerald-100 text-emerald-800 border-emerald-200",
     "Baking": "bg-amber-100 text-amber-800 border-amber-200",
     "Ready": "bg-blue-100 text-blue-800 border-blue-200",
+    "Pending": "bg-slate-100 text-slate-800 border-slate-200",
+    "Preparing": "bg-indigo-100 text-indigo-800 border-indigo-200"
   };
 
   const columns = [
