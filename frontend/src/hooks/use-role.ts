@@ -9,8 +9,7 @@ export function useRole() {
     role,
     setRole,
     isLoading,
-    isSuperAdmin: role === "super-admin",
-    isAdmin: role === "super-admin" || role === "admin",
+    isAdmin: role === "admin",
     isClient: role === "client",
   };
 }

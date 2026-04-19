@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-export type UserRole = "super-admin" | "admin" | "client";
+export type UserRole = "admin" | "client";
 
 interface UserContextType {
   role: UserRole;
@@ -18,7 +18,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const savedRole = localStorage.getItem("sweetops_role") as UserRole;
-    if (savedRole && ["super-admin", "admin", "client"].includes(savedRole)) {
+    if (savedRole && ["admin", "client"].includes(savedRole)) {
       setRoleState(savedRole);
     }
     setIsLoading(false);

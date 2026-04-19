@@ -20,10 +20,10 @@ export function ChartCard({ title, description, children, className }: ChartCard
   }, []);
 
   return (
-    <Card className={`rounded-2xl border-orange-900/10 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white ${className || ""}`}>
+    <Card className={`rounded-2xl border-border/40 shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-shadow duration-300 bg-white ${className || ""}`}>
       <CardHeader>
-        <CardTitle className="font-heading text-lg text-amber-950">{title}</CardTitle>
-        {description && <CardDescription className="text-slate-500">{description}</CardDescription>}
+        <CardTitle className="font-heading text-xl font-bold text-foreground">{title}</CardTitle>
+        {description && <CardDescription className="text-foreground/60">{description}</CardDescription>}
       </CardHeader>
       <CardContent>
         {isLoading ? (

@@ -5,10 +5,8 @@ import { useOrder } from "@/context/OrderContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Cake, ShoppingCart, User, Search, Minus, Plus, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Cake, ShoppingBag, Search, Minus, Plus, ArrowRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +15,7 @@ const BAKERY_PRODUCTS = [
     id: 101,
     name: "Classic Chocolate Fudge",
     price: 35.00,
-    tag: "Best Seller",
+    tag: "Signature",
     category: "Birthday Cakes",
     image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80",
   },
@@ -38,29 +36,29 @@ const BAKERY_PRODUCTS = [
   },
   {
     id: 104,
-    name: "Velvet Rose Cupcakes (6x)",
-    price: 24.00,
-    tag: "Best Seller",
-    category: "Cupcakes",
-    image: "https://images.unsplash.com/photo-1607958674115-05b248a8a94b?w=600&q=80",
+    name: "Velvet Rose Macarons (6x)",
+    price: 28.00,
+    tag: "Signature",
+    category: "Pastries",
+    image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800&q=80",
   },
   {
     id: 105,
-    name: "Lemon Raspberry Drip",
+    name: "Vanilla Bean Mille-Feuille",
     price: 42.00,
-    category: "Birthday Cakes",
-    image: "https://images.unsplash.com/photo-1582234372722-50d7ccc30ebd?w=600&q=80",
+    category: "Pastries",
+    image: "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?w=800&q=80",
   },
   {
     id: 106,
-    name: "Blueberry Dream Cupcake",
-    price: 4.50,
-    category: "Cupcakes",
-    image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80",
+    name: "Dark Chocolate Tart",
+    price: 38.50,
+    category: "Pastries",
+    image: "https://images.unsplash.com/photo-1519869325930-281384150729?w=800&q=80",
   }
 ];
 
-const CATEGORIES = ["All", "Birthday Cakes", "Wedding Cakes", "Custom Cakes", "Cupcakes"];
+const CATEGORIES = ["All", "Pastries", "Birthday Cakes", "Wedding Cakes", "Custom Cakes"];
 
 export default function BakeryStorefront() {
   const { cart, addToCart, removeFromCart, placeOrder } = useOrder();
@@ -95,86 +93,86 @@ export default function BakeryStorefront() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent font-sans selection:bg-purple-100 flex flex-col transition-colors duration-300">
+    <div className="min-h-screen bg-background font-sans selection:bg-primary/20 flex flex-col transition-colors duration-300">
       
-      {/* 1. HEADER (Sticky) */}
-      <header className="sticky top-0 z-50 bg-transparent/90 backdrop-blur-md border-b border-pink-900/10 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      {/* HEADER */}
+      <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border/40 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between gap-6">
           
-          <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-900 text-cream shadow-md group-hover:-rotate-12 transition-transform duration-300">
-              <Cake className="h-6 w-6 text-white" />
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transform group-hover:-rotate-6 transition-all duration-300">
+              <Cake className="h-5 w-5 text-current" />
             </div>
-            <span className="hidden sm:inline font-extrabold text-2xl tracking-tighter text-purple-950">
-              SweetOps
+            <span className="hidden sm:inline font-extrabold text-2xl tracking-normal text-foreground font-heading">
+              L'Élégance
             </span>
           </Link>
 
-          <div className="relative flex-1 max-w-md hidden md:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-purple-900/40" />
+          <div className="relative flex-1 max-w-lg hidden md:block">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
             <Input 
-              placeholder="Search cakes..." 
-              className="w-full pl-10 pr-4 h-12 rounded-full border-none bg-white shadow-sm focus-visible:ring-2 focus-visible:ring-pink-200 text-purple-950 placeholder:text-purple-900/50"
+              placeholder="Search patisseries..." 
+              className="w-full pl-12 pr-4 h-12 rounded-full border-border/40 bg-secondary/30 focus-visible:ring-1 focus-visible:ring-primary/50 text-foreground placeholder:text-foreground/40 transition-all"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+          <div className="flex items-center shrink-0">
             <Sheet open={isCheckoutOpen} onOpenChange={(open) => {
               setIsCheckoutOpen(open);
               if (!open) setTimeout(() => setCheckoutStep("cart"), 300);
             }}>
               <SheetTrigger render={
-                <Button variant="ghost" className="relative group rounded-full h-12 w-12 hover:bg-purple-100/50 transition-colors">
-                  <ShoppingCart className="h-6 w-6 text-purple-950 group-hover:scale-110 transition-transform" />
+                <button className="relative flex items-center justify-center rounded-full h-12 w-12 hover:bg-secondary transition-colors group">
+                  <ShoppingBag className="h-6 w-6 text-foreground group-hover:scale-105 transition-transform" />
                   {cart.length > 0 && (
-                    <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white text-[10px] font-bold shadow-sm animate-in zoom-in">
+                    <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold shadow-sm animate-in zoom-in">
                       {cart.length}
                     </span>
                   )}
-                </Button>
+                </button>
               } />
               
-              {/* 5. & 6. CART DRAWER & ORDER FLOW */}
-              <SheetContent className="flex flex-col w-full sm:max-w-lg bg-transparent border-l-0 shadow-2xl p-0">
-                <SheetHeader className="p-6 border-b border-pink-900/10 bg-white">
-                  <SheetTitle className="text-2xl font-bold text-purple-950 flex items-center gap-2">
-                    {checkoutStep === "cart" ? "Your Cart" : checkoutStep === "form" ? "Checkout Details" : "Order Placed!"}
+              <SheetContent className="flex flex-col w-full sm:max-w-md bg-background border-l border-border/40 shadow-2xl p-0">
+                <SheetHeader className="p-8 border-b border-border/40 bg-secondary/10">
+                  <SheetTitle className="text-2xl font-bold font-heading text-foreground flex items-center gap-2">
+                    {checkoutStep === "cart" ? "Your Selection" : checkoutStep === "form" ? "Details" : "Magnifique!"}
                   </SheetTitle>
                 </SheetHeader>
 
-                <div className="flex-1 overflow-y-auto px-6 py-6 h-full">
+                <div className="flex-1 overflow-y-auto px-8 py-6 h-full font-sans">
                   {checkoutStep === "cart" && (
                     cart.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center h-full space-y-4 text-purple-900/50">
-                        <ShoppingCart className="h-16 w-16 opacity-30" />
-                        <p className="font-medium text-lg text-center">Your cart is empty.</p>
+                      <div className="flex flex-col items-center justify-center h-full space-y-4 text-foreground/40">
+                        <ShoppingBag className="h-16 w-16 opacity-30" />
+                        <p className="font-medium text-lg text-center">Your basket is empty.</p>
                         <Button 
                           onClick={() => setIsCheckoutOpen(false)} 
-                          variant="ghost" 
-                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 mt-2"
+                          variant="link" 
+                          className="text-primary hover:text-primary/80"
                         >
-                          Browse Cakes
+                          Discover Pastries
                         </Button>
                       </div>
                     ) : (
-                      <div className="space-y-4">
+                      <div className="space-y-6">
                         {cart.map((item) => (
-                          <div key={item.id} className="flex gap-4 bg-white p-4 rounded-2xl shadow-sm border border-pink-900/5 group hover:border-pink-900/10 transition-colors">
-                            <div className="h-20 w-20 bg-pink-50 rounded-xl overflow-hidden shrink-0">
-                              {item.image && <img src={item.image} alt={item.name} className="h-full w-full object-cover" />}
+                          <div key={item.id} className="flex gap-5 border-b border-border/40 pb-6 last:border-0 group">
+                            <div className="h-24 w-20 bg-secondary/50 rounded-xl overflow-hidden shrink-0 shadow-sm">
+                              {item.image && <img src={item.image} alt={item.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />}
                             </div>
-                            <div className="flex-1 flex flex-col justify-center">
-                              <h4 className="font-bold text-purple-950 text-sm line-clamp-1">{item.name}</h4>
-                              <p className="text-blue-600 font-bold text-sm mb-2">${(item.price * item.quantity).toFixed(2)}</p>
-                              
-                              <div className="flex items-center gap-3 bg-transparent w-fit rounded-full p-1">
-                                <button onClick={() => removeFromCart(item.id)} className="h-6 w-6 rounded-full flex items-center justify-center hover:bg-white hover:shadow-sm transition-all text-purple-900">
+                            <div className="flex-1 flex flex-col justify-between py-1">
+                              <div>
+                                <h4 className="font-bold text-foreground text-sm line-clamp-2 leading-tight">{item.name}</h4>
+                                <p className="text-foreground/80 font-semibold text-sm mt-1">${(item.price * item.quantity).toFixed(2)}</p>
+                              </div>
+                              <div className="flex items-center gap-3 bg-secondary/30 w-fit rounded-full px-2 py-1 border border-border/50">
+                                <button onClick={() => removeFromCart(item.id)} className="h-6 w-6 rounded-full flex items-center justify-center hover:bg-white hover:shadow-sm transition-all text-foreground">
                                   <Minus className="h-3 w-3" />
                                 </button>
-                                <span className="text-xs font-bold text-purple-950 min-w-[12px] text-center">{item.quantity}</span>
-                                <button onClick={() => addToCart(item)} className="h-6 w-6 rounded-full flex items-center justify-center hover:bg-white hover:shadow-sm transition-all text-purple-900">
+                                <span className="text-xs font-bold text-foreground min-w-[16px] text-center">{item.quantity}</span>
+                                <button onClick={() => addToCart(item)} className="h-6 w-6 rounded-full flex items-center justify-center hover:bg-white hover:shadow-sm transition-all text-foreground">
                                   <Plus className="h-3 w-3" />
                                 </button>
                               </div>
@@ -188,29 +186,29 @@ export default function BakeryStorefront() {
                   {checkoutStep === "form" && (
                     <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-6">
                       <div className="space-y-2">
-                        <Label className="text-purple-950 font-bold">Full Name</Label>
-                        <Input required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="h-12 rounded-xl bg-white border-pink-900/20 focus-visible:ring-blue-500" placeholder="Jane Doe" />
+                        <Label className="text-foreground font-semibold">Full Name</Label>
+                        <Input required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="h-12 rounded-xl bg-secondary/20 border-border/50 focus-visible:border-primary/50" placeholder="Madame Dubois" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-purple-950 font-bold">Delivery Address</Label>
-                        <Input required value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="h-12 rounded-xl bg-white border-pink-900/20 focus-visible:ring-blue-500" placeholder="123 Bakery Lane" />
+                        <Label className="text-foreground font-semibold">Delivery Location</Label>
+                        <Input required value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="h-12 rounded-xl bg-secondary/20 border-border/50 focus-visible:border-primary/50" placeholder="Paris, France" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-purple-950 font-bold">Phone Number</Label>
-                        <Input required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} type="tel" className="h-12 rounded-xl bg-white border-pink-900/20 focus-visible:ring-blue-500" placeholder="(555) 000-0000" />
+                        <Label className="text-foreground font-semibold">Contact No.</Label>
+                        <Input required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} type="tel" className="h-12 rounded-xl bg-secondary/20 border-border/50 focus-visible:border-primary/50" placeholder="+33 000 0000" />
                       </div>
                     </form>
                   )}
 
                   {checkoutStep === "success" && (
                     <div className="flex flex-col items-center justify-center h-full space-y-6 text-center animate-in zoom-in duration-500">
-                      <div className="h-24 w-24 bg-green-100 rounded-full flex items-center justify-center">
-                        <CheckCircle2 className="h-12 w-12 text-green-600" />
+                      <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center">
+                        <CheckCircle2 className="h-12 w-12 text-primary" />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold text-purple-950">Thank You!</h3>
-                        <p className="text-purple-900/70 mt-2 max-w-sm mx-auto">
-                          Your sweet order has been placed. We're warming up the ovens!
+                        <h3 className="text-3xl font-bold font-heading text-foreground mb-4">Merci C'est Fait!</h3>
+                        <p className="text-foreground/70 max-w-[250px] mx-auto text-lg leading-relaxed">
+                          Your elegant order is being prepared with dedication.
                         </p>
                       </div>
                     </div>
@@ -218,26 +216,25 @@ export default function BakeryStorefront() {
                 </div>
 
                 {cart.length > 0 && checkoutStep !== "success" && (
-                  <div className="p-6 bg-white border-t border-pink-900/10 space-y-4 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
+                  <div className="p-8 bg-background border-t border-border/40 space-y-6 shadow-[0_-10px_40px_rgba(0,0,0,0.02)]">
                     <div className="flex items-center justify-between text-lg">
-                      <span className="font-semibold text-purple-950/70">Subtotal</span>
-                      <span className="font-extrabold text-purple-950 flex items-baseline gap-1">
-                        <span className="text-sm font-medium text-purple-900/50">USD</span>
+                      <span className="font-semibold text-foreground/60 uppercase tracking-widest text-xs">Total</span>
+                      <span className="font-bold text-foreground text-2xl tracking-tight">
                         ${cartTotal.toFixed(2)}
                       </span>
                     </div>
                     {checkoutStep === "cart" ? (
-                      <Button onClick={() => setCheckoutStep("form")} className="w-full h-14 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-lg shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 relative group overflow-hidden">
-                         Proceed to Checkout
-                         <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                      <Button onClick={() => setCheckoutStep("form")} className="w-full h-14 rounded-xl bg-foreground hover:bg-foreground/90 text-background font-bold text-lg shadow-lg hover:-translate-y-0.5 transition-all">
+                         Checkout Securely
+                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
                     ) : (
-                      <div className="flex gap-2">
-                        <Button type="button" variant="outline" onClick={() => setCheckoutStep("cart")} className="h-14 rounded-2xl border-pink-900/20 text-purple-950 hover:bg-pink-50 px-6">
+                      <div className="flex gap-3">
+                        <Button type="button" variant="outline" onClick={() => setCheckoutStep("cart")} className="h-14 rounded-xl border-border/60 text-foreground hover:bg-secondary px-6">
                            Back
                         </Button>
-                        <Button type="submit" form="checkout-form" className="flex-1 h-14 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-lg shadow-lg shadow-blue-500/20 transition-all">
-                           Confirm Order
+                        <Button type="submit" form="checkout-form" className="flex-1 h-14 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg shadow-lg shadow-primary/20 transition-all">
+                           Place Order
                         </Button>
                       </div>
                     )}
@@ -245,59 +242,24 @@ export default function BakeryStorefront() {
                 )}
               </SheetContent>
             </Sheet>
-
-            <Link href="/select-role">
-              <Button variant="ghost" className="rounded-full h-12 w-12 hover:bg-purple-100/50">
-                <User className="h-6 w-6 text-purple-950" />
-              </Button>
-            </Link>
           </div>
-          
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-24">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-32">
         
-        {/* 2. HERO SECTION */}
-        <section className="py-12 md:py-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div className="bg-purple-900 rounded-[2.5rem] overflow-hidden relative min-h-[400px] flex items-center justify-center p-8 md:p-16 text-center isolate shadow-2xl shadow-purple-900/20">
-            {/* Background Image/Overlay */}
-            <div className="absolute inset-0 opacity-20 mix-blend-overlay">
-               <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=1200&q=80" alt="Bakery Hero" className="w-full h-full object-cover" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-purple-950/80 via-purple-900/40 to-transparent" />
-            
-            <div className="relative z-10 max-w-3xl space-y-6">
-              <span className="inline-block py-1.5 px-4 rounded-full bg-white/20 backdrop-blur-md text-white font-bold text-sm tracking-widest uppercase border border-white/20 shadow-xl">
-                Artisanal Quality
-              </span>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight drop-shadow-md">
-                Freshly Baked Happiness 🍰
-              </h1>
-              <p className="text-lg md:text-2xl text-white/90 max-w-2xl mx-auto font-medium drop-shadow">
-                Order custom cakes, delicate pastries, and everyday breads for every occasion.
-              </p>
-              <div className="pt-4">
-                <Button onClick={() => window.scrollTo({ top: 600, behavior: "smooth" })} className="h-14 rounded-full px-10 bg-white text-purple-950 hover:bg-pink-50 font-bold text-lg shadow-xl transition-all hover:scale-105">
-                  Explore Cakes
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 3. CATEGORY FILTER */}
-        <div className="sticky top-20 z-40 bg-transparent/90 backdrop-blur-md py-4 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x">
+        {/* Categories */}
+        <div className="pt-12 pb-8 sticky top-24 z-40 bg-background/90 backdrop-blur-md -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 className={cn(
-                  "snap-start shrink-0 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 shadow-sm border",
+                  "snap-start shrink-0 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border",
                   activeCategory === cat 
-                    ? "bg-purple-900 text-white border-purple-900 hover:shadow-md hover:-translate-y-0.5" 
-                    : "bg-white text-purple-950 border-pink-900/10 hover:bg-pink-50 hover:border-pink-900/20"
+                    ? "bg-foreground text-background border-foreground shadow-[0_4px_15px_rgb(0,0,0,0.1)]" 
+                    : "bg-transparent text-foreground/70 border-border/50 hover:border-foreground/20 hover:text-foreground"
                 )}
               >
                 {cat}
@@ -306,63 +268,65 @@ export default function BakeryStorefront() {
           </div>
         </div>
 
-        {/* 4. PRODUCT GRID */}
-        {filteredProducts.length === 0 ? (
-           <div className="text-center py-24 text-purple-900/60">
-             <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-             <p className="text-xl font-medium">No sweets found matching your search.</p>
-           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="group bg-white rounded-[2rem] p-4 flex flex-col shadow-sm hover:shadow-xl transition-all duration-500 border border-pink-900/5 hover:-translate-y-1 relative">
-                
-                {/* Image Container */}
-                <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-pink-50 mb-4">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                  />
-                  {product.tag && (
-                    <div className="absolute top-3 left-3">
-                      <span className={cn(
-                        "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full shadow-lg backdrop-blur-md",
-                        product.tag === "Best Seller" ? "bg-pink-500/90 text-white" : "bg-blue-500/90 text-white"
-                      )}>
-                        {product.tag}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Details */}
-                <div className="flex-1 flex flex-col px-2 pb-2">
-                  <p className="text-xs font-bold text-purple-900/50 uppercase tracking-wider mb-1">{product.category}</p>
-                  <h3 className="text-lg font-bold text-purple-950 line-clamp-1 group-hover:text-purple-700 transition-colors">
-                    {product.name}
-                  </h3>
+        {/* Product Grid */}
+        <div className="mt-4">
+          {filteredProducts.length === 0 ? (
+             <div className="text-center py-32 text-foreground/40">
+               <Search className="h-10 w-10 mx-auto mb-6 opacity-30" />
+               <p className="text-lg font-medium">No specialties found.</p>
+             </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="group relative flex flex-col">
                   
-                  <div className="mt-auto pt-6 flex items-end justify-between gap-4">
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium text-purple-900/50">Price</span>
-                      <span className="text-2xl font-extrabold text-blue-600">${product.price.toFixed(2)}</span>
-                    </div>
+                  {/* Image Container */}
+                  <div className="relative aspect-[4/5] w-full rounded-[2rem] overflow-hidden bg-secondary/30 mb-5 shadow-sm group-hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all duration-500">
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                    />
+                    {/* Add overlay on hover */}
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     
-                    <Button 
-                      onClick={() => handleAddToCart(product)}
-                      className="rounded-2xl h-12 px-6 bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 font-bold"
-                    >
-                      <Plus className="mr-2 h-5 w-5" />
-                      Add
-                    </Button>
-                  </div>
-                </div>
+                    {product.tag && (
+                      <div className="absolute top-4 left-4">
+                        <span className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full bg-white/95 text-foreground backdrop-blur-md shadow-sm">
+                          {product.tag}
+                        </span>
+                      </div>
+                    )}
 
-              </div>
-            ))}
-          </div>
-        )}
+                    <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <Button 
+                        size="icon"
+                        onClick={(e) => { e.preventDefault(); handleAddToCart(product); }}
+                        className="rounded-full h-12 w-12 bg-white text-foreground hover:bg-primary hover:text-white shadow-xl !scale-100"
+                      >
+                        <Plus className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Details */}
+                  <div className="flex flex-col px-2">
+                    <div className="flex justify-between items-start gap-4">
+                      <div>
+                        <h3 className="text-lg font-bold font-heading text-foreground mb-1 leading-tight group-hover:text-primary transition-colors">
+                          {product.name}
+                        </h3>
+                        <p className="text-xs font-semibold text-foreground/40 uppercase tracking-widest">{product.category}</p>
+                      </div>
+                      <span className="text-lg font-bold text-foreground">${product.price.toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
       </main>
 

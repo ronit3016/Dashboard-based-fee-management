@@ -6,11 +6,6 @@ import {
   ShoppingCart,
   Users,
   CreditCard,
-  Settings,
-  X,
-  Menu,
-  ChevronLeft,
-  ChevronRight,
   LogOut,
   TrendingUp,
 } from "lucide-react";
@@ -25,13 +20,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-
-import { useRole } from "@/hooks/use-role";
 
 const adminItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -41,32 +31,24 @@ const adminItems = [
   { name: "Payments", href: "/dashboard/payments", icon: TrendingUp },
 ];
 
-const clientItems = [
-  { name: "Shop Menu", href: "/dashboard/shop", icon: ShoppingCart },
-  { name: "My Orders", href: "/dashboard/my-orders", icon: LayoutDashboard },
-];
-
 export function AppSidebar() {
   const pathname = usePathname();
-  const { isAdmin } = useRole();
-
-  const navItems = isAdmin ? adminItems : clientItems;
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border bg-card">
-      <SidebarHeader className="flex items-center justify-between p-4">
-        <div className="flex items-center gap-2 font-bold text-primary">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <span className="text-lg">S</span>
+    <Sidebar collapsible="icon" className="border-r border-border bg-white shadow-[2px_0_15px_rgb(0,0,0,0.02)]">
+      <SidebarHeader className="flex items-center justify-between p-6">
+        <div className="flex items-center gap-3 font-bold text-primary">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+            <span className="text-xl font-heading">L</span>
           </div>
-          <span className="truncate group-data-[collapsible=icon]:hidden font-heading text-xl">
-            SweetOps
+          <span className="truncate group-data-[collapsible=icon]:hidden font-heading text-2xl text-foreground">
+            L'Élégance
           </span>
         </div>
       </SidebarHeader>
-      <SidebarContent className="px-2">
-        <SidebarMenu>
-          {navItems.map((item) => {
+      <SidebarContent className="px-3 pt-4">
+        <SidebarMenu className="gap-2">
+          {adminItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <SidebarMenuItem key={item.name}>
@@ -75,11 +57,13 @@ export function AppSidebar() {
                   tooltip={item.name}
                   isActive={isActive}
                   className={cn(
-                    "transition-all hover:bg-secondary hover:text-secondary-foreground",
-                    isActive && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                    "transition-all duration-300 h-12 rounded-xl text-foreground/70 font-medium",
+                    isActive 
+                      ? "bg-primary/5 text-primary hover:bg-primary/10 font-bold shadow-sm"
+                      : "hover:bg-secondary/50 hover:text-foreground"
                   )}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className={cn("h-5 w-5", isActive ? "text-primary" : "text-foreground/50")} />
                   <span>{item.name}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -87,15 +71,15 @@ export function AppSidebar() {
           })}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-4">
+      <SidebarFooter className="p-4 border-t border-border/40">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton 
-              render={<Button variant="ghost" className="w-full justify-start gap-2 hover:bg-destructive/10 hover:text-destructive" />}
+              render={<Button variant="ghost" className="w-full h-12 rounded-xl justify-start gap-3 hover:bg-destructive/5 hover:text-destructive text-foreground/60 transition-colors" />}
               tooltip="Logout"
             >
               <LogOut className="h-5 w-5" />
-              <span className="group-data-[collapsible=icon]:hidden">Logout</span>
+              <span className="group-data-[collapsible=icon]:hidden font-medium">Log out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
